@@ -6,15 +6,18 @@ import {
   AiOutlineEdit,
 } from "react-icons/ai";
 import { app } from "../../../config";
-import AddCriteria from "./AddCriteria";
-import DeleteCriteria from "./DeleteCriteria";
-import EditCriteria from "./EditCriteria";
+import AddSubcriteria from "./AddSubcriteria";
+import DeleteSubcriteria from "./DeleteSubcriteria";
+import EditSubcriteria from "./EditSubcriteria";
 
 const db = getDatabase(app);
-const DataCriteria = () => {
+const DataSubcriteria = () => {
+  const [dataSubcriteria, setDataSubcriteria] = useState([]);
+  const [selectedSubcriteria, setSelectedSubcriteria] = useState({});
+  const [openAddSubcriteria, setOpenAddSubcriteria] = useState(false);
+  const [openDeleteSubcriteria, setOpenDeleteSubcriteria] = useState(false);
+  const [openEditSubcriteria, setOpenEditSubcriteria] = useState(false);
   const [dataCriteria, setDataCriteria] = useState([]);
-  const [selectedCriteria, setSelectedCriteria] = useState({});
-  const [openAddCriteria, setOpenCriteria] = useState(false);
   const [openDeleteCriteria, setOpenDeleteCriteria] = useState(false);
   const [openEditCriteria, setOpenEditCriteria] = useState(false);
 
@@ -32,30 +35,47 @@ const DataCriteria = () => {
         });
       });
       setDataCriteria(data);
-      console.log(data);
     });
   };
 
-  const fetchSelectedDelete = (selectedCriteria) => {
-    setSelectedCriteria(selectedCriteria);
-    setOpenDeleteCriteria(true);
+  const fetchDataSubcriteria = () => {
+    const criteriaRef = ref(db, "subcriteria");
+    onValue(criteriaRef, (snapshot) => {
+      const data = [];
+      snapshot.forEach((childSnapshot) => {
+        const key = childSnapshot.key;
+        const value = childSnapshot.val();
+
+        data.push({
+          key,
+          value,
+        });
+      });
+      setDataSubcriteria(data);
+    });
   };
 
-  const fetchSelectedEdit = (selectedSubdistrict) => {
-    setSelectedCriteria(selectedSubdistrict);
-    setOpenEditCriteria(true);
+  const fetchSelectedDelete = (selectedSubcriteria) => {
+    setSelectedSubcriteria(selectedSubcriteria);
+    setOpenDeleteSubcriteria(true);
+  };
+
+  const fetchSelectedEdit = (selectedSubcriteria) => {
+    setSelectedSubcriteria(selectedSubcriteria);
+    setOpenEditSubcriteria(true);
   };
   useEffect(() => {
     fetchData();
+    fetchDataSubcriteria();
   }, []);
   return (
     <>
       <div className="flex items-center justify-end">
-        <button className="btn" onClick={() => setOpenCriteria(true)}>
+        <button className="btn" onClick={() => setOpenAddSubcriteria(true)}>
           <AiOutlinePlusCircle className="icon" />
         </button>
       </div>
-      {dataCriteria.length === 0 ? (
+      {dataSubcriteria.length === 0 ? (
         <>
           <p className="text-center">Tidak ada data</p>
         </>
@@ -67,20 +87,18 @@ const DataCriteria = () => {
               <thead>
                 <tr className="text-center">
                   <th></th>
-                  <th>Kode</th>
                   <th>Kriteria</th>
-                  <th>Atribut</th>
+                  <th>Subkriteria</th>
                   <th>Bobot</th>
                   <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
-                {dataCriteria.map((item, index) => (
+                {dataSubcriteria.map((item, index) => (
                   <tr key={index + 1}>
                     <td>{index + 1}</td>
-                    <td>C{index + 1}</td>
                     <td className="text-center">{item.value.criteria}</td>
-                    <td className="text-center">{item.value.attribute}</td>
+                    <td className="text-center">{item.value.subcriteria}</td>
                     <td className="text-center">{item.value.weight}</td>
                     <td className="flex items-center justify-center space-x-4">
                       <button
@@ -103,21 +121,27 @@ const DataCriteria = () => {
           </div>
         </>
       )}
-      {openAddCriteria && <AddCriteria setOpenAddCriteria={setOpenCriteria} />}
-      {openDeleteCriteria && (
-        <DeleteCriteria
-          selectedCriteria={selectedCriteria}
-          setOpenDeleteCriteria={setOpenDeleteCriteria}
+      {openAddSubcriteria && (
+        <AddSubcriteria
+          dataCriteria={dataCriteria}
+          setOpenSubcriteria={setOpenAddSubcriteria}
         />
       )}
-      {openEditCriteria && (
-        <EditCriteria
-          selectedCriteria={selectedCriteria}
-          setOpenEditCriteria={setOpenEditCriteria}
+      {openDeleteSubcriteria && (
+        <DeleteSubcriteria
+          selectedSubcriteria={selectedSubcriteria}
+          setOpenDeleteSubcriteria={setOpenDeleteSubcriteria}
+        />
+      )}
+      {openEditSubcriteria && (
+        <EditSubcriteria
+          dataCriteria={dataCriteria}
+          selectedSubcriteria={selectedSubcriteria}
+          setOpenEditSubcriteria={setOpenEditSubcriteria}
         />
       )}
     </>
   );
 };
 
-export default DataCriteria;
+export default DataSubcriteria;

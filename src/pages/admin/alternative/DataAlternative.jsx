@@ -32,6 +32,7 @@ const DataAlternative = () => {
         });
       });
       setDataAlternative(data);
+      console.log(data);
     });
   };
 

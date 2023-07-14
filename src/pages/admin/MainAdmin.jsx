@@ -7,6 +7,7 @@ import { FiFolder, FiLogOut } from "react-icons/fi";
 import { AiFillCalendar, AiFillPieChart } from "react-icons/ai";
 import DataAlternative from "./alternative/DataAlternative";
 import DataCriteria from "./criteria/DataCriteria";
+import DataSubcriteria from "./subcriteria/DataSubcriteria";
 import Calculate from "./calculate/Calculate";
 
 const MainAdmin = () => {
@@ -16,14 +17,19 @@ const MainAdmin = () => {
 
   const menus = [
     {
-      name: "Alternatif",
-      link: "/alternative",
-      icon: FiFolder,
-    },
-    {
       name: "Kriteria",
       link: "/criteria",
       icon: AiFillCalendar,
+    },
+    {
+      name: "Subkriteria",
+      link: "/subcriteria",
+      icon: AiFillCalendar,
+    },
+    {
+      name: "Alternatif",
+      link: "/alternative",
+      icon: FiFolder,
     },
     {
       name: "Perhitungan",
@@ -120,6 +126,7 @@ const MainAdmin = () => {
           <Routes>
             <Route path="/alternative" element={<DataAlternative />} />\
             <Route path="/criteria" element={<DataCriteria />} />
+            <Route path="/subcriteria" element={<DataSubcriteria />} />
             <Route path="/calculate" element={<Calculate />} />
           </Routes>
         </div>
